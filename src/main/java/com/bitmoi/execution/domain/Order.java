@@ -9,12 +9,12 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
 
-@Table(value = "orderbook")
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(value = "orderbook")
 public class Order {
 
     @Id
@@ -28,10 +28,10 @@ public class Order {
     private Integer coinid;
 
     @Column(value = "price")
-    private Float price;
+    private Double price;
 
     @Column(value = "quantity")
-    private Float quantity;
+    private Double quantity;
 
     @Column(value = "types")
     private String types;

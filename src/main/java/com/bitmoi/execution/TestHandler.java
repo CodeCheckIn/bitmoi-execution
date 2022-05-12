@@ -1,5 +1,7 @@
 package com.bitmoi.execution;
 
+import com.bitmoi.execution.domain.Coin;
+import com.bitmoi.execution.repository.CoinRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -17,11 +19,12 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 public class TestHandler {
     @Autowired
     TestRepository testRepository;
-
+    @Autowired
+    CoinRepository coinRepository;
     public Mono<ServerResponse> getTables(ServerRequest request){
-        Flux<TestTable> testTableFlux = testRepository.findAll();
+        Mono<Coin> coinMono = coinRepository.getCoinPriceById(20);
         return ok().contentType(MediaType.APPLICATION_JSON)
-                .body(testTableFlux,TestTable.class)
+                .body(coinMono,Coin.class)
                 .log("test");
     }
 

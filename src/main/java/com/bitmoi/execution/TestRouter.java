@@ -16,7 +16,7 @@ public class TestRouter {
     @Bean
     public RouterFunction<ServerResponse> index(TestHandler testHandler){
         return RouterFunctions
-                .route(GET("/tests").and(accept(MediaType.APPLICATION_JSON)), testHandler::getTables);
+                .route(GET("/test").and(accept(MediaType.APPLICATION_JSON)), testHandler::getTables);
 
     }
 }
