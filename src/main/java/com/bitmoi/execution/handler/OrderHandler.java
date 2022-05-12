@@ -2,6 +2,7 @@ package com.bitmoi.execution.handler;
 
 import com.bitmoi.execution.domain.Order;
 import com.bitmoi.execution.repository.OrderRepository;
+import com.bitmoi.execution.service.CoinService;
 import com.bitmoi.execution.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,17 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 public class OrderHandler {
     @Autowired
     OrderService orderService;
-
+    @Autowired
+    CoinService coinService;
     public Mono<ServerResponse> getOrder(ServerRequest request){
+        System.out.println("야야야야");
+        System.out.println("야야야야");
+        System.out.println("야야야야");
+        System.out.println("야야야야");
+        System.out.println("야야야야");
+        System.out.println("야야야야");
         Mono<Integer> executeOrder = request.bodyToMono(Order.class)
+                .filter(order -> order.getPrice() > coinService.getCoinPriceById(order).block())
                 .flatMap(order -> {
                     return orderService.executeOrder(order);
                 })

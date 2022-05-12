@@ -22,7 +22,7 @@ public class TestHandler {
     @Autowired
     CoinRepository coinRepository;
     public Mono<ServerResponse> getTables(ServerRequest request){
-        Mono<Coin> coinMono = coinRepository.getCoinPriceById(20);
+        Mono<Double> coinMono = coinRepository.getCoinPriceById(20);
         return ok().contentType(MediaType.APPLICATION_JSON)
                 .body(coinMono,Coin.class)
                 .log("test");

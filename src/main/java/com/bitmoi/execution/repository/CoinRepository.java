@@ -8,9 +8,9 @@ import reactor.core.publisher.Mono;
 
 public interface CoinRepository extends ReactiveCrudRepository<Coin, Integer> {
 
-    @Query("select coin_id,price from coin \n" +
-            "where coin_id =:coinId\n" +
+    @Query("select price from coin \n" +
+            "where coin_id =:coinId \n" +
             "order by updated_at DESC \n" +
             "limit 1")
-    Mono<Coin> getCoinPriceById(long coinId);
+    Mono<Double> getCoinPriceById(long coinId);
 }

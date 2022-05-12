@@ -6,5 +6,5 @@ import reactor.core.publisher.Mono;
 
 public interface CoinService {
 
-    Mono<Coin> getCoinPriceById(Order order);
+    Mono<Double> getCoinPriceById(Order order);
 }
