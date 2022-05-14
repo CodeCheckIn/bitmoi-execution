@@ -22,10 +22,11 @@ public class TestHandler {
     @Autowired
     CoinRepository coinRepository;
     public Mono<ServerResponse> getTables(ServerRequest request){
-        Mono<Double> coinMono = coinRepository.getCoinPriceById(20);
-        return ok().contentType(MediaType.APPLICATION_JSON)
-                .body(coinMono,Coin.class)
-                .log("test");
+////        Mono<Double> coinMono = coinRepository.getCoinPriceById(20);
+//        return ok().contentType(MediaType.APPLICATION_JSON)
+//                .body(coinMono,Coin.class)
+//                .log("test");
+        return null;
     }
 
 

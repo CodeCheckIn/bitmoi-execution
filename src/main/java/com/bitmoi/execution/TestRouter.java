@@ -8,8 +8,7 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
-import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
-import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
+import static org.springframework.web.reactive.function.server.RequestPredicates.*;
 
 @Component
 public class TestRouter {
@@ -22,6 +21,6 @@ public class TestRouter {
     @Bean
     public RouterFunction<ServerResponse> order(OrderHandler orderHandler){
         return RouterFunctions
-                .route(GET("/order").and(accept(MediaType.APPLICATION_JSON)), orderHandler::getOrder);
+                .route(POST("/order"), orderHandler::getOrder);
     }
 }

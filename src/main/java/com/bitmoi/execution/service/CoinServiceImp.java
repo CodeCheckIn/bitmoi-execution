@@ -12,7 +12,7 @@ public class CoinServiceImp implements CoinService{
     @Autowired
     CoinRepository coinRepository;
     @Override
-    public Mono<Double> getCoinPriceById(Order order) {
+    public Mono<Coin> getCoinPriceById(Order order) {
         return coinRepository.getCoinPriceById(order.getCoinid());
     }
 }

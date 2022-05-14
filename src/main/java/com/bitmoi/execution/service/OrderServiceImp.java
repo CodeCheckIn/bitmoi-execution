@@ -13,6 +13,13 @@ public class OrderServiceImp implements OrderService{
 
     @Override
     public Mono<Integer> executeOrder(Order order) {
-        return orderRepository.updateByIsExecuteInOrder(order.getState(),order.getCoinid());
+        System.out.println(order.getCoinid());
+        if(order.getCoinid() != null) return orderRepository.updateByIsExecuteInOrder(order.getCoinid());
+        return Mono.just(0);
+    }
+
+    @Override
+    public Mono<Order> save(Order order) {
+        return orderRepository.save(order);
     }
 }

@@ -12,10 +12,10 @@ import reactor.core.publisher.Mono;
 public interface OrderRepository extends ReactiveCrudRepository<Order, Integer> {
 
     @Modifying
-    @Query("UPDATE order set state='execute' where state=:state and coinId=:coinid")
-    Mono<Integer> updateByIsExecuteInOrder(@Param("state") String state, @Param("coinId") int coinid);
+    @Query("UPDATE orderbook set state='execute' where state='wait' and coinid=:coinid")
+    Mono<Integer> updateByIsExecuteInOrder(@Param("coinId") int coinid);
 
     @Modifying
-    @Query("UPDATE order set state='execute' where orderid=:orderid and coinId=:coinid")
+    @Query("UPDATE orderbook set state='execute' where orderid=:orderid and coinid=:coinid")
     Mono<Integer> updateByOrderId(@Param("orderid") int orderid);
 }

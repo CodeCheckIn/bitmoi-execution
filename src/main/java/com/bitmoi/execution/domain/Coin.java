@@ -23,8 +23,7 @@ public class Coin {
 
     @Column(value = "price")
     private Float price;
-
-    @Column(value = "updated_at")
-    private LocalDateTime updatedAt;
-
+//
+//    @Column(value = "updated_at")
+//    private LocalDateTime updated_at;
 }
