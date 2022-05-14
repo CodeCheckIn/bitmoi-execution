@@ -20,8 +20,6 @@ class CoinServiceTest {
     Order order;
     @BeforeEach
     void setUp() {
-        this.coin = new Coin(1L,"BTC",5000F, LocalDateTime.now());
-        this.order = new Order(1,1,20,1.0,1.0,"","",LocalDateTime.now(),LocalDateTime.now());
     }
 
     @Test
