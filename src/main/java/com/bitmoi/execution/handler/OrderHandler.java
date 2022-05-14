@@ -47,9 +47,9 @@ public class OrderHandler {
                 .flatMap(order -> {
                     return saveExecute(order);
                 })
-                .flatMap(execute ->{
-                    return updateWallet(execute);
-                })
+//                .flatMap(execute ->{
+//                    return updateWallet(execute);
+//                })
                 .subscribeOn(Schedulers.parallel())
                 .log("execute Order get");
 
@@ -78,7 +78,6 @@ public class OrderHandler {
                             System.out.println("KRW 삭제");
                             return walletService.save(wallet);
                         }
-                        return Flux.just(wallet);
                     //매도
                     }else if(execute.getTypes().equals(ASK)){
                         if (execute.getCoin_id().equals(wallet.getCoin_id())) {
@@ -89,7 +88,6 @@ public class OrderHandler {
                             wallet.setQuantity(wallet.getQuantity()+execute.getQuantity()*execute.getPrice());
                             return walletService.save(wallet);
                         }
-                        return Flux.just(wallet);
                     }
                     return Flux.just(wallet);
                 })
