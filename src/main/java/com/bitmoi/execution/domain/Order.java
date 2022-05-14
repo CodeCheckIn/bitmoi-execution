@@ -1,14 +1,8 @@
 package com.bitmoi.execution.domain;
 
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
-
-import java.sql.Date;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -19,11 +13,11 @@ import java.time.LocalDateTime;
 public class Order {
 
     @Id
-    private Integer orderid;
+    private Long orderid;
 
-    private Integer userid;
+    private Long userid;
 
-    private Integer coinid;
+    private Long coinid;
 
     private Double price;
 

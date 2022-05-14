@@ -13,9 +13,6 @@ public interface OrderRepository extends ReactiveCrudRepository<Order, Integer> 
 
     @Modifying
     @Query("UPDATE orderbook set state='execute' where state='wait' and coinid=:coinid")
-    Mono<Integer> updateByIsExecuteInOrder(@Param("coinId") int coinid);
+    Mono<Integer> updateByIsExecuteInOrder(@Param("coinId") long coinid);
 
-    @Modifying
-    @Query("UPDATE orderbook set state='execute' where orderid=:orderid and coinid=:coinid")
-    Mono<Integer> updateByOrderId(@Param("orderid") int orderid);
 }

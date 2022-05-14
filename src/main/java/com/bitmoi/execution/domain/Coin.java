@@ -22,7 +22,7 @@ public class Coin {
     private String name;
 
     @Column(value = "price")
-    private Float price;
+    private Double price;
 //
 //    @Column(value = "updated_at")
 //    private LocalDateTime updated_at;
