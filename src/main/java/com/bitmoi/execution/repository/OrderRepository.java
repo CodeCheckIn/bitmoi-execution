@@ -6,6 +6,7 @@ import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
@@ -15,4 +16,6 @@ public interface OrderRepository extends ReactiveCrudRepository<Order, Integer> 
     @Query("UPDATE orderbook set state='execute' where state='wait' and coinid=:coinid")
     Mono<Integer> updateByIsExecuteInOrder(@Param("coinId") long coinid);
 
+    @Query("SELECT * FROM order WHERE coinId=:coinId AND state='wait'")
+    Flux<Order> findAllByCoinId(long coinId);
 }

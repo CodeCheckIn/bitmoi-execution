@@ -1,5 +1,6 @@
 package com.bitmoi.execution;
 
+import com.bitmoi.execution.handler.BatchHandler;
 import com.bitmoi.execution.handler.OrderHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
@@ -22,5 +23,11 @@ public class TestRouter {
     public RouterFunction<ServerResponse> order(OrderHandler orderHandler){
         return RouterFunctions
                 .route(POST("/order"), orderHandler::getOrder);
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> order(BatchHandler batchHandler){
+        return RouterFunctions
+                .route(POST("/batch"), batchHandler::getBatch);
     }
 }
