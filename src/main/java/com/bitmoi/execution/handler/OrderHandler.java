@@ -37,6 +37,23 @@ public class OrderHandler {
     @Autowired
     WalletService walletService;
 
+    public Mono<Execute> getOrder(Order kafkaOrder){
+        return Mono.just(kafkaOrder)
+                .flatMap(order -> {
+                    return checkTypeAndPrice(order);
+                })
+                .flatMap(order -> {
+                    return updateOrderbook(order);
+                })
+                .flatMap(order -> {
+                    return saveExecute(order);
+                })
+                .flatMap(execute -> {
+                    return updateWallet(execute);
+                })
+                .subscribeOn(Schedulers.boundedElastic())
+                .log("execute Order get");
+    };
     public Mono<ServerResponse> getOrder(ServerRequest request) {
         Mono<Execute> executeMono = request.bodyToMono(Order.class)
                 .flatMap(order -> {
