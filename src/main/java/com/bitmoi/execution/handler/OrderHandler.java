@@ -36,7 +36,8 @@ public class OrderHandler {
     ExecuteService executeService;
     @Autowired
     WalletService walletService;
-    public Mono<ServerResponse> getOrder(ServerRequest request){
+
+    public Mono<ServerResponse> getOrder(ServerRequest request) {
         Mono<Execute> executeMono = request.bodyToMono(Order.class)
                 .flatMap(order -> {
                     return checkTypeAndPrice(order);
@@ -47,9 +48,9 @@ public class OrderHandler {
                 .flatMap(order -> {
                     return saveExecute(order);
                 })
-//                .flatMap(execute ->{
-//                    return updateWallet(execute);
-//                })
+                .flatMap(execute -> {
+                    return updateWallet(execute);
+                })
                 .subscribeOn(Schedulers.parallel())
                 .log("execute Order get");
 
@@ -63,37 +64,29 @@ public class OrderHandler {
     private Mono<Execute> updateWallet(Execute execute) {
         System.out.println("지갑업데이트");
         return walletService.getWalletByUserId(execute.getUser_id())
-                .flatMap(wallet -> {
-                    //매수
-                    if(execute.getTypes().equals(BID)) {
-                        System.out.println(wallet.toString());
+                .filter(wallet -> {
+                    if (execute.getTypes().equals(BID)) {
                         if (execute.getCoin_id().equals(wallet.getCoin_id())) {
                             wallet.setAvg_price((wallet.getQuantity() * wallet.getAvg_price() + execute.getQuantity() * execute.getPrice()) / wallet.getQuantity() + execute.getQuantity());
                             wallet.setQuantity(wallet.getQuantity() + execute.getQuantity());
-                            System.out.println("매수코인저장");
-                            return walletService.save(wallet);
                         } else if (wallet.getCoin_id() == KRW_ID) {
                             wallet.setQuantity(wallet.getQuantity() - (execute.getPrice() * execute.getQuantity()));
                             wallet.setWaiting_qty(wallet.getWaiting_qty() - (execute.getPrice() * execute.getQuantity()));
-                            System.out.println("KRW 삭제");
-                            return walletService.save(wallet);
                         }
-                    //매도
-                    }else if(execute.getTypes().equals(ASK)){
+                        return true;
+                    } else if (execute.getTypes().equals(ASK)) {
                         if (execute.getCoin_id().equals(wallet.getCoin_id())) {
-                            wallet.setAvg_price(wallet.getQuantity()-execute.getQuantity());
-                            wallet.setWaiting_qty(wallet.getWaiting_qty()-execute.getQuantity());
-                            return walletService.save(wallet);
+                            wallet.setAvg_price(wallet.getQuantity() - execute.getQuantity());
+                            wallet.setWaiting_qty(wallet.getWaiting_qty() - execute.getQuantity());
                         } else if (wallet.getCoin_id() == KRW_ID) {
-                            wallet.setQuantity(wallet.getQuantity()+execute.getQuantity()*execute.getPrice());
-                            return walletService.save(wallet);
+                            wallet.setQuantity(wallet.getQuantity() + execute.getQuantity() * execute.getPrice());
                         }
+                        return true;
                     }
-                    return Flux.just(wallet);
+                    return false;
                 })
-                .take(1)
-                .next()
-                .map(m->execute);
+                .flatMap(wallet -> walletService.updateWallet(wallet))
+                .next().map(m -> execute);
     }
 
     private Mono<Execute> saveExecute(Order order) {
@@ -101,7 +94,7 @@ public class OrderHandler {
     }
 
     private Mono<Order> updateOrderbook(Order order) {
-        if(order.getCoinid()!=null){
+        if (order.getCoinid() != null) {
             order.setState(EXECUTE);
             return orderService.save(order);
         }
@@ -110,15 +103,15 @@ public class OrderHandler {
 
     private Mono<Order> checkTypeAndPrice(Order order) {
         //매수
-        if(order.getTypes().equals(BID)){
+        if (order.getTypes().equals(BID)) {
             return coinService.getCoinPriceById(order)
                     .filter(n -> order.getPrice() >= n.getPrice())
                     .map(m -> {
                         order.setPrice(m.getPrice());
                         return order;
                     });
-        //매도
-        }else if(order.getTypes().equals(ASK)){
+            //매도
+        } else if (order.getTypes().equals(ASK)) {
             return coinService.getCoinPriceById(order)
                     .filter(n -> order.getPrice() <= n.getPrice())
                     .map(m -> {
