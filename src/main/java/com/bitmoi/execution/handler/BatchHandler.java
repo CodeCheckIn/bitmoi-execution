@@ -8,6 +8,7 @@ import com.bitmoi.execution.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
@@ -22,8 +23,11 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 @Component
 @RequiredArgsConstructor
 public class BatchHandler {
+    public static final String BID = "bid";
+    public static final String ASK = "ask";
     @Autowired
     OrderService orderService;
+    @Transactional
     public Mono<ServerResponse> getBatch(ServerRequest request) {
         Mono<Coin> mono = request.bodyToMono(Coin.class)
                 .flatMap(coin -> {
@@ -31,26 +35,30 @@ public class BatchHandler {
                             .filter(order -> {
                                 return checkOrderBook(coin, order);
                             })
+                            .flatMap(order->{
+                                System.out.println(order.toString());
+                                return null;
+                            })
                             .next().map(m->{
                                 return coin;
                             });
                 })
                 .subscribeOn(Schedulers.parallel())
-                .log("execute Order get");
+                .log("batch get");
 
         return ok()
                 .contentType(APPLICATION_JSON)
                 .body(mono, Coin.class)
                 .onErrorResume(error -> ServerResponse.badRequest().build())
-                .log("execute Order ok");
+                .log("batch ok");
     }
 
     private boolean checkOrderBook(Coin coin, Order order) {
-        if(order.getTypes().equals("bid")
+        if(order.getTypes().equals(BID)
         && order.getPrice()>= coin.getPrice()){
             order.setPrice(coin.getPrice());
             return true;
-        }else if(order.getTypes().equals("aks")
+        }else if(order.getTypes().equals(ASK)
                 && order.getPrice()<= coin.getPrice()){
             order.setPrice(coin.getPrice());
             return true;

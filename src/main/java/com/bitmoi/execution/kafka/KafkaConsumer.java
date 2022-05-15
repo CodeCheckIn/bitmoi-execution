@@ -28,16 +28,16 @@ public class KafkaConsumer{
 //    public void consumeAsk(String message) {
 //        logger.info(String.format("Consumed Ask message -> %s", message));
 //    }
-    @KafkaListener(topics = "order", groupId = "bitmoi")
-    public Mono<Execute> consumeOrder(String message) {
-        logger.info(String.format("Consumed Ask message -> %s", message));
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            Order order = mapper.readValue(message, Order.class);
-            return orderHandler.getOrder(order);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+//    @KafkaListener(topics = "order", groupId = "bitmoi")
+//    public Mono<Execute> consumeOrder(String message) {
+//        logger.info(String.format("Consumed Ask message -> %s", message));
+//        ObjectMapper mapper = new ObjectMapper();
+//        try {
+//            Order order = mapper.readValue(message, Order.class);
+//            return orderHandler.getOrder(order);
+//        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 }

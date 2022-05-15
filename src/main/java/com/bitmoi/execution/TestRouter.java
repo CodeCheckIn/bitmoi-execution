@@ -26,7 +26,7 @@ public class TestRouter {
     }
 
     @Bean
-    public RouterFunction<ServerResponse> order(BatchHandler batchHandler){
+    public RouterFunction<ServerResponse> batch(BatchHandler batchHandler){
         return RouterFunctions
                 .route(POST("/batch"), batchHandler::getBatch);
     }

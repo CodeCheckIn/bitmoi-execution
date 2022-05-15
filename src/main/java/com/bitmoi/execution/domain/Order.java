@@ -2,7 +2,10 @@ package com.bitmoi.execution.domain;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
+
+import java.sql.Date;
 
 @Getter
 @Setter
@@ -13,8 +16,9 @@ import org.springframework.data.relational.core.mapping.Table;
 public class Order {
 
     @Id
+    @Column(value = "orderbook_id")
     private Long orderid;
-
+    @Column(value = "user_id")
     private Long userid;
 
     private Long coinid;
@@ -27,8 +31,8 @@ public class Order {
 
     private String state;
 
-    private String createdat;
+    private Date createdat;
 
-    private String updatedat;
+    private Date updatedat;
 
 }

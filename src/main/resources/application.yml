@@ -1,6 +1,10 @@
 spring:
-  r2dbc:
-    url: r2dbc:mysql://127.0.0.1:3306/test?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+#  r2dbc:
+#    url: r2dbc:mysql://127.0.0.1:3306/test?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+#    username: root
+#    password: Tak2268641!
+   r2dbc:
+    url: r2dbc:mysql://database-bitmoi.cvfodwqlg87f.ap-northeast-2.rds.amazonaws.com:3306/bitmoi
     username: root
     password: Tak2268641!
 logging:
