@@ -2,18 +2,10 @@ server:
   port: 8081
 spring:
   r2dbc:
-<<<<<<< HEAD
     url: r2dbc:mysql://127.0.0.1:3306/test?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
     username: root
     password: Tak2268641!
 
-=======
-    url: r2dbc:mysql://localhost:3306/bitmoi?autoReconnect=true
-    username: bitmoi
-    password: bitmoi6!
-#    url: r2dbc:mysql://127.0.0.1:3306/test?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
-#    username: root
-#    password: Tak2268641!
   kafka:
     consumer:
       bootstrap-servers: localhost:9092
@@ -21,16 +13,13 @@ spring:
       auto-offset-reset: earliest
       enable-auto-commit: true
       max-poll-records: 1000
->>>>>>> 04c267b7ccf5b0fb2c7beefb9c6f5babaaae76fc
+
 logging:
   level:
     root: info
     org.springframework.r2dbc: DEBUG
   application:
     name: execution-service
-
-server:
-  port: 0
 
 eureka:
   instance:
