@@ -4,6 +4,7 @@ import com.bitmoi.execution.domain.Coin;
 import com.bitmoi.execution.domain.Execute;
 import com.bitmoi.execution.domain.Order;
 import com.bitmoi.execution.repository.OrderRepository;
+import com.bitmoi.execution.service.ExecuteService;
 import com.bitmoi.execution.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
@@ -25,24 +27,27 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 public class BatchHandler {
     public static final String BID = "bid";
     public static final String ASK = "ask";
+    public static final String EXECUTE = "execute";
     @Autowired
     OrderService orderService;
+    @Autowired
+    ExecuteService executeService;
     @Transactional
     public Mono<ServerResponse> getBatch(ServerRequest request) {
         Mono<Coin> mono = request.bodyToMono(Coin.class)
-                .flatMap(coin -> {
-                    return orderService.findAllByCoinId(coin) //coinid 같고 wait 상태 가져오기.
-                            .filter(order -> {
-                                return checkOrderBook(coin, order);
-                            })
-                            .flatMap(order->{
-                                System.out.println("야야야야야");
-                                System.out.println(order.toString());
-                                return null;
-                            })
-                            .next().map(m->{
-                                return coin;
-                            });
+                .flatMapMany(coin -> {
+                    return checkCoinInfo(coin);
+                })
+                .flatMap(order->{
+                    return updateOrder(order);
+                })
+                .flatMap(order -> {
+                    return saveExecute(order);
+                })
+                .next()
+                .map(m->{
+                    System.out.println(m);
+                    return new Coin();
                 })
                 .subscribeOn(Schedulers.parallel())
                 .log("batch get");
@@ -52,6 +57,22 @@ public class BatchHandler {
                 .body(mono, Coin.class)
                 .onErrorResume(error -> ServerResponse.badRequest().build())
                 .log("batch ok");
+    }
+
+    private Mono<Execute> saveExecute(Order order) {
+        return executeService.save(new Execute(order.getOrderid(), order.getUserid(), order.getCoinid(), order.getPrice(), order.getQuantity(), order.getTypes(), LocalDateTime.now()));
+    }
+
+    private Mono<Order> updateOrder(Order order) {
+        order.setTypes(EXECUTE);
+        return orderService.save(order);
+    }
+
+    private Flux<Order> checkCoinInfo(Coin coin) {
+        return orderService.findAllByCoinId(coin)
+                .filter(order -> {
+                    return checkOrderBook(coin, order);
+                });
     }
 
     private boolean checkOrderBook(Coin coin, Order order) {

@@ -62,7 +62,6 @@ public class OrderHandler {
     }
 
     private Mono<Execute> updateWallet(Execute execute) {
-        System.out.println("지갑업데이트");
         return walletService.getWalletByUserId(execute.getUser_id())
                 .filter(wallet -> {
                     if (execute.getTypes().equals(BID)) {

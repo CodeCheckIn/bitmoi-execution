@@ -22,6 +22,8 @@ public class OrderServiceImp implements OrderService{
 
     @Override
     public Mono<Order> save(Order order) {
+        System.out.println("input!!!!!");
+        System.out.println(order.toString());
         return orderRepository.save(order);
     }
 
