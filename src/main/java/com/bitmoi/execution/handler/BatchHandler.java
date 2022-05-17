@@ -36,6 +36,7 @@ public class BatchHandler {
                                 return checkOrderBook(coin, order);
                             })
                             .flatMap(order->{
+                                System.out.println("야야야야야");
                                 System.out.println(order.toString());
                                 return null;
                             })
