@@ -9,6 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.MessageHeaders;
+import org.springframework.messaging.handler.annotation.Headers;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
@@ -19,6 +22,7 @@ public class KafkaConsumer{
 
     @Autowired
     OrderHandler orderHandler;
+<<<<<<< HEAD
 //    @KafkaListener(topics = "order-bid", groupId = "bitmoi")
 //    public void consumeBid(String message) {
 //        logger.info(String.format("Consumed Bid message -> %s", message));
@@ -40,4 +44,16 @@ public class KafkaConsumer{
 //        }
 //        return null;
 //    }
+=======
+
+    @KafkaListener(topics = "bitmoi-order", groupId = "bitmoi")
+    public void consume(@Headers MessageHeaders headers, @Payload Object payload) {
+        logger.info("CONSUME HEADERS : " + headers.toString());
+        logger.info("CONSUME PAYLOAD : " + payload);
+        System.out.println("CONSUME HEADERS : " + headers.toString());
+        System.out.println("CONSUME PAYLOAD : " + payload);
+    }
+
+
+>>>>>>> 04c267b7ccf5b0fb2c7beefb9c6f5babaaae76fc
 }
