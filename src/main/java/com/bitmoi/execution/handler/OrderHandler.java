@@ -2,7 +2,6 @@ package com.bitmoi.execution.handler;
 
 import com.bitmoi.execution.domain.Execute;
 import com.bitmoi.execution.domain.Order;
-import com.bitmoi.execution.domain.Wallet;
 import com.bitmoi.execution.service.CoinService;
 import com.bitmoi.execution.service.ExecuteService;
 import com.bitmoi.execution.service.OrderService;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
@@ -37,7 +35,8 @@ public class OrderHandler {
     ExecuteService executeService;
     @Autowired
     WalletService walletService;
-
+//    @Autowired
+//    KafkaProducer kafkaProducer;
     public Mono<ServerResponse> getOrder(ServerRequest request) {
         Mono<Execute> executeMono = request.bodyToMono(Order.class)
                 .flatMap(order -> {
@@ -51,6 +50,9 @@ public class OrderHandler {
                 })
                 .flatMap(execute -> {
                     return updateWallet(execute);
+                })
+                .doOnNext(execute -> {
+//                    kafkaProducer.(execute);
                 })
                 .subscribeOn(Schedulers.parallel())
                 .log("execute Order get");

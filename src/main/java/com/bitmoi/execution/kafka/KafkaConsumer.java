@@ -22,29 +22,6 @@ public class KafkaConsumer{
 
     @Autowired
     OrderHandler orderHandler;
-<<<<<<< HEAD
-//    @KafkaListener(topics = "order-bid", groupId = "bitmoi")
-//    public void consumeBid(String message) {
-//        logger.info(String.format("Consumed Bid message -> %s", message));
-//    }
-//
-//    @KafkaListener(topics = "order-ask", groupId = "bitmoi")
-//    public void consumeAsk(String message) {
-//        logger.info(String.format("Consumed Ask message -> %s", message));
-//    }
-//    @KafkaListener(topics = "order", groupId = "bitmoi")
-//    public Mono<Execute> consumeOrder(String message) {
-//        logger.info(String.format("Consumed Ask message -> %s", message));
-//        ObjectMapper mapper = new ObjectMapper();
-//        try {
-//            Order order = mapper.readValue(message, Order.class);
-//            return orderHandler.getOrder(order);
-//        } catch (JsonProcessingException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-=======
 
     @KafkaListener(topics = "bitmoi-order", groupId = "bitmoi")
     public void consume(@Headers MessageHeaders headers, @Payload Object payload) {
@@ -55,5 +32,4 @@ public class KafkaConsumer{
     }
 
 
->>>>>>> 04c267b7ccf5b0fb2c7beefb9c6f5babaaae76fc
 }
