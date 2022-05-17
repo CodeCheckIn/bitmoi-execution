@@ -10,10 +10,10 @@ import reactor.core.publisher.Mono;
 
 @Repository
 public interface WalletRepository extends ReactiveCrudRepository<Wallet, Integer> {
-    @Query("select * from Wallet where user_id =:user_id")
+    @Query("select * from WALLET where user_id =:user_id")
     Flux<Wallet> findByUserId(long user_id);
 
     @Modifying
-    @Query("UPDATE Wallet Set quantity =:quantity, waiting_qty =:waiting_qty, avg_price =:avg_price where wallet_id=:wallet_id ")
+    @Query("UPDATE WALLET Set quantity =:quantity, waiting_qty =:waiting_qty, avg_price =:avg_price where wallet_id=:wallet_id ")
     Mono<Integer> updateWallet(double quantity,double waiting_qty, double avg_price, long wallet_id);
 }

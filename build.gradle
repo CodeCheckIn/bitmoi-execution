@@ -27,6 +27,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
 
+	compileOnly 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310' // Datetime
 }
 
 tasks.named('test') {

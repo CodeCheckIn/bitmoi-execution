@@ -10,18 +10,18 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.time.LocalDateTime;
 
 @Data
-@Table(value = "wallet")
+@Table(value = "WALLET")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Wallet {
-    private Long wallet_id;
-    private Long user_id;
-    private Long coin_id;
-    private Double quantity;
-    private Double waiting_qty;
-    private Double avg_price;
+    private Integer wallet_id;
+    private Integer user_id;
+    private Integer coin_id;
+    private double quantity;
+    private double waiting_qty;
+    private double avg_price;
 
-    public Wallet(Long user_id, Long coin_id, Double quantity, Double avg_price) {
+    public Wallet(Integer user_id, Integer coin_id, Double quantity, Double avg_price) {
         this.user_id = user_id;
         this.coin_id = coin_id;
         this.quantity = quantity;

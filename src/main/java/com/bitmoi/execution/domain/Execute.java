@@ -10,19 +10,19 @@ import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
-@Table(value = "Execute")
+@Table(value = "EXECUTE")
 public class Execute {
-    private Long execute_id;
-    private Long order_id;
-    private Long user_id;
-    private Long coin_id;
+    private Integer execute_id;
+    private Integer order_id;
+    private Integer user_id;
+    private Integer coin_id;
     private Double price;
     private Double quantity;
     private String types;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
 
-    public Execute(Long order_id, Long user_id, Long coin_id, Double price, Double quantity, String types, LocalDateTime created_at) {
+    public Execute(Integer order_id, Integer user_id, Integer coin_id, Double price, Double quantity, String types, LocalDateTime created_at) {
         this.order_id = order_id;
         this.user_id = user_id;
         this.coin_id = coin_id;

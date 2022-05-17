@@ -13,9 +13,9 @@ import reactor.core.publisher.Mono;
 public interface OrderRepository extends ReactiveCrudRepository<Order, Integer> {
 
     @Modifying
-    @Query("UPDATE orderbook set state='execute' where state='wait' and coinid=:coinid")
+    @Query("UPDATE ORDERBOOK set state='execute' where state='wait' and coin_id=:coinid")
     Mono<Integer> updateByIsExecuteInOrder(@Param("coinId") long coinid);
 
-    @Query("SELECT * FROM orderbook WHERE coinId=:coinId AND state='wait'")
+    @Query("SELECT * FROM ORDERBOOK WHERE coin_id=:coinId AND state='wait'")
     Flux<Order> findAllByCoinId(long coinId);
 }
