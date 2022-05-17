@@ -28,6 +28,7 @@ public class OrderHandler {
     public static final String BID = "bid";
     public static final String ASK = "ask";
     public static final int KRW_ID = 10;
+    public static final String WAIT = "wait";
     @Autowired
     OrderService orderService;
     @Autowired
@@ -93,7 +94,7 @@ public class OrderHandler {
     }
 
     private Mono<Order> updateOrderbook(Order order) {
-        if (order.getCoinid() != null) {
+        if (order.getCoinid() != null && order.getTypes().equals(WAIT)) {
             order.setState(EXECUTE);
             return orderService.save(order);
         }
