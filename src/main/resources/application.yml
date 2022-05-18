@@ -1,6 +1,9 @@
 server:
   port: 8081
+
 spring:
+  application:
+    name: execution-service
   r2dbc:
     url: r2dbc:mysql://127.0.0.1:3306/test?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
     username: root
@@ -21,8 +24,6 @@ logging:
   level:
     root: info
     org.springframework.r2dbc: DEBUG
-  application:
-    name: execution-service
 
 eureka:
   instance:
