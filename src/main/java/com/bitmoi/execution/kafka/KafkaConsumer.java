@@ -1,5 +1,6 @@
 package com.bitmoi.execution.kafka;
 
+import com.bitmoi.execution.domain.Coin;
 import com.bitmoi.execution.domain.Execute;
 import com.bitmoi.execution.domain.Order;
 import com.bitmoi.execution.handler.OrderHandler;
@@ -18,18 +19,21 @@ import reactor.core.scheduler.Schedulers;
 
 @Service
 public class KafkaConsumer{
+    public static final String BITMOI_ORDER = "bitmoi-order";
+    public static final String BITMOI_QUOTATION = "bitmoi-quotation";
+    public static final String BITMOI = "bitmoi";
     private final Logger logger = LoggerFactory.getLogger(KafkaConsumer.class);
 
     @Autowired
     OrderHandler orderHandler;
 
-    @KafkaListener(topics = "bitmoi-order", groupId = "bitmoi")
-    public void consume(@Headers MessageHeaders headers, @Payload Object payload) {
-        logger.info("CONSUME HEADERS : " + headers.toString());
-        logger.info("CONSUME PAYLOAD : " + payload);
-        System.out.println("CONSUME HEADERS : " + headers.toString());
-        System.out.println("CONSUME PAYLOAD : " + payload);
+    @KafkaListener(topics = BITMOI_ORDER, groupId = BITMOI)
+    public void consumeOrder(Order order) {
+        System.out.printf("[Order] '%s %s %s \n", order.getCoinid(), order.getPrice(), order.getQuantity());
     }
 
-
+    @KafkaListener(topics = BITMOI_QUOTATION, groupId = BITMOI)
+    public void consumeBatch(Coin coin) {
+        System.out.printf("[Coin] '%s %s %s \n", coin.getCoinId(), coin.getName(), coin.getPrice());
+    }
 }
