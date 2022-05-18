@@ -101,7 +101,7 @@ public class BatchHandler {
 
     private Mono<Order> updateOrder(Order order) {
         System.out.println("=========2.updateOrder=========");
-        order.setTypes(EXECUTE);
+        order.setState(EXECUTE);
         return orderService.save(order);
     }
 
