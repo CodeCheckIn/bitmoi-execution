@@ -27,14 +27,7 @@ public class KafkaConsumerConfig {
     private String KAFKA_GROUPID;
 
     @Bean
-    public Map<String, Object> stringConsumerConfigs() {
-        Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVER);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, KAFKA_GROUPID);
-        return props;
-    }
-    @Bean
-    public ConsumerFactory<String, Coin> getCoinConsumerProps() {
+    public ConsumerFactory<String, Object> getCoinConsumerProps() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVER);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "TOPIC-COIN");
@@ -45,14 +38,14 @@ public class KafkaConsumerConfig {
         );
     }
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, Coin> coinConcurrentKafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, Coin> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, Object> coinConcurrentKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(getCoinConsumerProps());
         return factory;
     }
 
     @Bean
-    public ConsumerFactory<String, Order> getOrderConsumerProps() {
+    public ConsumerFactory<String, Object> getOrderConsumerProps() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVER);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "TOPIC-ORDER");
@@ -63,8 +56,8 @@ public class KafkaConsumerConfig {
         );
     }
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, Order> orderConcurrentKafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, Order> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, Object> orderConcurrentKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(getOrderConsumerProps());
         return factory;
     }
