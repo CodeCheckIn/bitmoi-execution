@@ -20,11 +20,11 @@ public class Order {
 
     @Id
     @Column(value = "orderbook_id")
-    private Integer order_id;
+    private Integer orderid;
     @Column(value = "user_id")
-    private Integer user_id;
+    private Integer userid;
     @Column(value = "coin_id")
-    private Integer coin_id;
+    private Integer coinid;
 
     private Double price;
 

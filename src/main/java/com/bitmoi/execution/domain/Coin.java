@@ -18,7 +18,7 @@ public class Coin {
 
     @Id
     @Column(value="coin_id")
-    private Long coin_id;
+    private Long coinId;
 
     @Column(value = "name")
     private String name;
