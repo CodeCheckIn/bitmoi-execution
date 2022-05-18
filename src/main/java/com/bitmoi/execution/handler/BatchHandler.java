@@ -128,6 +128,7 @@ public class BatchHandler {
         return false;
     }
 
+    @Transactional
     public void getBatch(Coin kafkaCoin) {
         Mono.just(kafkaCoin)
         .publishOn(Schedulers.boundedElastic())
