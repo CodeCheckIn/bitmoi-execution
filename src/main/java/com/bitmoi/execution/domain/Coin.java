@@ -18,7 +18,7 @@ public class Coin {
 
     @Id
     @Column(value="coin_id")
-    private Long coinId;
+    private Integer coinId;
 
     @Column(value = "name")
     private String name;
@@ -31,4 +31,10 @@ public class Coin {
 
     @Column(value = "updated_at")
     private LocalDateTime updatedAt;
+
+    public Coin(Integer coinId, String name, Double price) {
+        this.coinId = coinId;
+        this.name = name;
+        this.price = price;
+    }
 }

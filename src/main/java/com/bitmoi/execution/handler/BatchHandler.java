@@ -127,6 +127,7 @@ public class BatchHandler {
 
     public void getBatch(Coin kafkaCoin) {
         Mono.just(kafkaCoin)
+        .publishOn(Schedulers.boundedElastic())
         .flatMapMany(coin -> {
             return checkCoinInfo(coin);
         })
@@ -140,7 +141,6 @@ public class BatchHandler {
             return updatedWallet(execute);
         })
         .collectList()
-        .subscribeOn(Schedulers.parallel())
-        .log("batch get");
+        .subscribe();
     }
 }
