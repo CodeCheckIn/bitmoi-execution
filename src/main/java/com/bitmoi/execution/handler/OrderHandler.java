@@ -87,6 +87,7 @@ public class OrderHandler {
     }
 
     private Mono<Execute> updateWallet(Execute execute) {
+        System.out.println("=========4.updateWallet=========");
         return walletService.getWalletByUserId(execute.getUser_id())
                 .filter(wallet -> {
                     if (execute.getTypes().equals(BID)) {
@@ -114,10 +115,12 @@ public class OrderHandler {
     }
 
     private Mono<Execute> saveExecute(Order order) {
+        System.out.println("=========3.saveExecute=========");
         return executeService.save(new Execute(order.getOrderid(), order.getUserid(), order.getCoinid(), order.getPrice(), order.getQuantity(), order.getTypes(), LocalDateTime.now()));
     }
 
     private Mono<Order> updateOrderbook(Order order) {
+        System.out.println("=========2.updateOrderbook=========");
         if (order.getCoinid() != null && order.getTypes().equals(WAIT)) {
             order.setState(EXECUTE);
             return orderService.save(order);
@@ -127,6 +130,8 @@ public class OrderHandler {
 
     private Mono<Order> checkTypeAndPrice(Order order) {
         System.out.println("=========Kafka Order Start=========");
+        System.out.println(order.toString());
+        System.out.println("=========1.checkTypeAndPrice=========");
         //매수
         if (order.getTypes().equals(BID)) {
             return coinService.getCoinPriceById(order)

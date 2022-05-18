@@ -17,7 +17,6 @@ public class KafkaConsumerService {
     @KafkaListener(topics = "bitmoi-quotation", containerFactory = "coinConcurrentKafkaListenerContainerFactory")
     public void consume(Coin coin) {
         batchHandler.getBatch(coin);
-        System.out.printf("[quotation] '%s %s %s \n", coin.getCoinId(), coin.getName(), coin.getPrice());
     }
     @KafkaListener(topics = "bitmoi-order", containerFactory = "orderConcurrentKafkaListenerContainerFactory")
     public void consume(Order order) {

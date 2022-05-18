@@ -65,6 +65,7 @@ public class BatchHandler {
     }
 
     private Flux<Execute> updatedWallet(Execute execute) {
+        System.out.println("=========4.updatedWallet=========");
         return walletService.getWalletByUserId(execute.getUser_id())
                 .filter(wallet -> {
                     if (execute.getTypes().equals(BID)) {
@@ -94,18 +95,22 @@ public class BatchHandler {
     }
 
     private Mono<Execute> saveExecute(Order order) {
+        System.out.println("=========3.saveExecute=========");
         return executeService.save(new Execute(order.getOrderid(), order.getUserid(), order.getCoinid(), order.getPrice(), order.getQuantity(), order.getTypes(), LocalDateTime.now()));
     }
 
     private Mono<Order> updateOrder(Order order) {
+        System.out.println("=========2.updateOrder=========");
         order.setTypes(EXECUTE);
         return orderService.save(order);
     }
 
     private Flux<Order> checkCoinInfo(Coin coin) {
+        System.out.println("=========Kafka Batch Start=========");
+        System.out.printf("%s %s %s \n", coin.getCoinId(), coin.getName(), coin.getPrice());
         return orderService.findAllByCoinId(coin)
                 .filter(order -> {
-                    System.out.println("=========Kafka Batch Start=========");
+                    System.out.println("=========1.checkCoinInfo=========");
                     return checkOrderBook(coin, order);
                 });
     }
