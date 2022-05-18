@@ -1,5 +1,6 @@
 package com.bitmoi.execution.config;
 
+import com.bitmoi.execution.domain.Coin;
 import com.bitmoi.execution.domain.Order;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -26,24 +27,42 @@ public class KafkaConsumerConfig {
     private String KAFKA_GROUPID;
 
     @Bean
-    public ConsumerFactory<String, Order> getConsumerProps() {
+    public Map<String, Object> stringConsumerConfigs() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVER);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, KAFKA_GROUPID);
-
+        return props;
+    }
+    @Bean
+    public ConsumerFactory<String, Coin> getCoinConsumerProps() {
         return new DefaultKafkaConsumerFactory<>(
-                props,
+                stringConsumerConfigs(),
                 new StringDeserializer(),
                 new ErrorHandlingDeserializer(new JsonDeserializer<>(Order.class, false))
         );
-
     }
-
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, Order> orderConcurrentKafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, Order> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(getConsumerProps());
+    public ConcurrentKafkaListenerContainerFactory<String, Coin> coinConcurrentKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, Coin> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(getCoinConsumerProps());
         return factory;
     }
 
+    @Bean
+    public ConsumerFactory<String, Order> getOrderConsumerProps() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVER);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, KAFKA_GROUPID);
+        return new DefaultKafkaConsumerFactory<>(
+                stringConsumerConfigs(),
+                new StringDeserializer(),
+                new ErrorHandlingDeserializer(new JsonDeserializer<>(Order.class, false))
+        );
+    }
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, Order> orderConcurrentKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, Order> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(getOrderConsumerProps());
+        return factory;
+    }
 }

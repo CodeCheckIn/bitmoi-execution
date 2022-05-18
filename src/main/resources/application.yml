@@ -15,10 +15,10 @@ spring:
 
     consumer:
       bootstrap-servers: localhost:9092
-      group-id: bitmoi
       auto-offset-reset: earliest
       enable-auto-commit: true
       max-poll-records: 1000
+      group-id: bitmoi
 
 logging:
   level:
