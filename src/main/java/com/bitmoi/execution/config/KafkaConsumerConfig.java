@@ -30,7 +30,7 @@ public class KafkaConsumerConfig {
     public Map<String, Object> stringConsumerConfigs() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVER);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, KAFKA_GROUPID);
+//        props.put(ConsumerConfig.GROUP_ID_CONFIG, KAFKA_GROUPID);
         return props;
     }
     @Bean
