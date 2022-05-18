@@ -38,6 +38,7 @@ public class BatchHandler {
     ExecuteService executeService;
     @Autowired
     WalletService walletService;
+
     @Transactional
     public Mono<ServerResponse> getBatch(ServerRequest request) {
         Mono<List<Execute>> mono = request.bodyToMono(Coin.class)
@@ -120,5 +121,24 @@ public class BatchHandler {
             return true;
         }
         return false;
+    }
+
+    public void getBatch(Coin kafkaCoin) {
+        Mono.just(kafkaCoin)
+        .flatMapMany(coin -> {
+            return checkCoinInfo(coin);
+        })
+        .flatMap(order->{
+            return updateOrder(order);
+        })
+        .flatMap(order -> {
+            return saveExecute(order);
+        })
+        .flatMap(execute -> {
+            return updatedWallet(execute);
+        })
+        .collectList()
+        .subscribeOn(Schedulers.parallel())
+        .log("batch get");
     }
 }
