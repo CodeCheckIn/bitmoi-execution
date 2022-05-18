@@ -3,8 +3,7 @@ package com.bitmoi.execution.handler;
 import com.bitmoi.execution.domain.Coin;
 import com.bitmoi.execution.domain.Execute;
 import com.bitmoi.execution.domain.Order;
-import com.bitmoi.execution.domain.Wallet;
-import com.bitmoi.execution.repository.OrderRepository;
+import com.bitmoi.execution.kafka.KafkaProducerService;
 import com.bitmoi.execution.service.ExecuteService;
 import com.bitmoi.execution.service.OrderService;
 import com.bitmoi.execution.service.WalletService;
@@ -18,7 +17,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -38,7 +36,8 @@ public class BatchHandler {
     ExecuteService executeService;
     @Autowired
     WalletService walletService;
-
+    @Autowired
+    KafkaProducerService kafkaProducerService;
     @Transactional
     public Mono<ServerResponse> getBatch(ServerRequest request) {
         Mono<List<Execute>> mono = request.bodyToMono(Coin.class)
@@ -90,7 +89,6 @@ public class BatchHandler {
                 })
                 .flatMap(wallet -> walletService.save(wallet))
                 .map(m->{
-                    System.out.println("Kafka Batch End=========");
                     return execute;
                 });
     }
@@ -139,6 +137,10 @@ public class BatchHandler {
         })
         .flatMap(execute -> {
             return updatedWallet(execute);
+        })
+        .doOnNext(execute -> kafkaProducerService.sendExecuteMessage(execute))
+        .doOnNext(execute -> {
+            System.out.println("=========Kafka Batch End=========");
         })
         .collectList()
         .subscribe();

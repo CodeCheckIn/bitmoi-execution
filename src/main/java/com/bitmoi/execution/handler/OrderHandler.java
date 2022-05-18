@@ -2,6 +2,7 @@ package com.bitmoi.execution.handler;
 
 import com.bitmoi.execution.domain.Execute;
 import com.bitmoi.execution.domain.Order;
+import com.bitmoi.execution.kafka.KafkaProducerService;
 import com.bitmoi.execution.service.CoinService;
 import com.bitmoi.execution.service.ExecuteService;
 import com.bitmoi.execution.service.OrderService;
@@ -35,7 +36,8 @@ public class OrderHandler {
     ExecuteService executeService;
     @Autowired
     WalletService walletService;
-
+    @Autowired
+    KafkaProducerService kafkaProducerService;
     public void getOrder(Order kafkaOrder){
         Mono.just(kafkaOrder)
             .publishOn(Schedulers.boundedElastic())
@@ -51,9 +53,9 @@ public class OrderHandler {
             .flatMap(execute -> {
                 return updateWallet(execute);
             })
+            .doOnNext(execute -> kafkaProducerService.sendExecuteMessage(execute))
             .doOnNext(execute -> {
-                System.out.println("=========Kafka Order Start=========");
-//                    kafkaProducer.(execute);
+                System.out.println("=========Kafka Order End=========");
             })
             .subscribe();
     }

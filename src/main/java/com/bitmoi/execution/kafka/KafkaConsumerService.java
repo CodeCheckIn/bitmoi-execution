@@ -3,7 +3,6 @@ package com.bitmoi.execution.kafka;
 import com.bitmoi.execution.domain.Coin;
 import com.bitmoi.execution.domain.Order;
 import com.bitmoi.execution.handler.BatchHandler;
-import com.bitmoi.execution.handler.OrderHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +10,8 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 @Service
-public class KafkaConsumer{
-    private final Logger logger = LoggerFactory.getLogger(KafkaConsumer.class);
+public class KafkaConsumerService {
+    private final Logger logger = LoggerFactory.getLogger(KafkaConsumerService.class);
     @Autowired
     BatchHandler batchHandler;
     @KafkaListener(topics = "bitmoi-quotation", containerFactory = "coinConcurrentKafkaListenerContainerFactory")
