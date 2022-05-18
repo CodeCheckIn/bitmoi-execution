@@ -107,7 +107,7 @@ public class BatchHandler {
     private Flux<Order> checkCoinInfo(Coin coin) {
         return orderService.findAllByCoinId(coin)
                 .filter(order -> {
-                    System.out.println("Kafka Batch Start=========");
+                    System.out.println("=========Kafka Batch Start=========");
                     return checkOrderBook(coin, order);
                 });
     }

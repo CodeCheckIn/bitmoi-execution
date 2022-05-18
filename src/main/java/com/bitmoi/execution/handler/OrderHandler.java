@@ -35,8 +35,28 @@ public class OrderHandler {
     ExecuteService executeService;
     @Autowired
     WalletService walletService;
-//    @Autowired
-//    KafkaProducer kafkaProducer;
+
+    public void getOrder(Order kafkaOrder){
+        Mono.just(kafkaOrder)
+            .publishOn(Schedulers.boundedElastic())
+            .flatMap(order -> {
+                return checkTypeAndPrice(order);
+            })
+            .flatMap(order -> {
+                return updateOrderbook(order);
+            })
+            .flatMap(order -> {
+                return saveExecute(order);
+            })
+            .flatMap(execute -> {
+                return updateWallet(execute);
+            })
+            .doOnNext(execute -> {
+                System.out.println("=========Kafka Order Start=========");
+//                    kafkaProducer.(execute);
+            })
+            .subscribe();
+    }
     public Mono<ServerResponse> getOrder(ServerRequest request) {
         Mono<Execute> executeMono = request.bodyToMono(Order.class)
                 .flatMap(order -> {
@@ -104,6 +124,7 @@ public class OrderHandler {
     }
 
     private Mono<Order> checkTypeAndPrice(Order order) {
+        System.out.println("=========Kafka Order Start=========");
         //매수
         if (order.getTypes().equals(BID)) {
             return coinService.getCoinPriceById(order)
