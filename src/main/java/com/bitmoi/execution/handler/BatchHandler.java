@@ -29,7 +29,7 @@ public class BatchHandler {
     public static final String BID = "bid";
     public static final String ASK = "ask";
     public static final String EXECUTE = "execute";
-    public static final int KRW_ID = 10;
+    public static final int KRW_ID = 9999;
     @Autowired
     OrderService orderService;
     @Autowired
