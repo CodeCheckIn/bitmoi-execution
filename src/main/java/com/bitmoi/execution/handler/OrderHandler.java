@@ -38,8 +38,8 @@ public class OrderHandler {
     WalletService walletService;
     @Autowired
     KafkaProducerService kafkaProducerService;
-    public Mono<Execute> getOrder(Order kafkaOrder){
-        return Mono.just(kafkaOrder)
+    public void getOrder(Order kafkaOrder){
+        Mono.just(kafkaOrder)
                 .publishOn(Schedulers.boundedElastic())
             .flatMap(order -> {
                 return checkTypeAndPrice(order);
@@ -56,7 +56,7 @@ public class OrderHandler {
             .doOnNext(execute -> kafkaProducerService.sendExecuteMessage(execute))
             .doOnNext(execute -> {
                 System.out.println("=========Kafka Order End=========");
-            });
+            }).subscribe();
     }
     public Mono<ServerResponse> getOrder(ServerRequest request) {
         Mono<Execute> executeMono = request.bodyToMono(Order.class)

@@ -130,8 +130,8 @@ public class BatchHandler {
     }
 
     @Transactional
-    public Flux<Execute> getBatch(Coin kafkaCoin) {
-        return Mono.just(kafkaCoin)
+    public void getBatch(Coin kafkaCoin) {
+        Mono.just(kafkaCoin)
                 .publishOn(Schedulers.boundedElastic())
         .flatMapMany(coin -> {
             return checkCoinInfo(coin);
@@ -144,10 +144,11 @@ public class BatchHandler {
         })
         .flatMap(execute -> {
             return updatedWallet(execute);
-        })
+        }).collectList()
         .doOnNext(execute -> kafkaProducerService.sendExecuteMessage(execute))
         .doOnNext(execute -> {
             System.out.println("=========Kafka Batch End=========");
-        });
+        })
+        .subscribe();
     }
 }

@@ -28,13 +28,15 @@ public class KafkaConsumerService {
     OrderHandler orderHandler;
 
     @KafkaListener(topics = "bitmoi-quotation", containerFactory = "coinConcurrentKafkaListenerContainerFactory")
-    public Flux<Execute> consume(Coin coin) {
-        return (Flux<Execute>) batchHandler.getBatch(coin).subscribe();
+    public String consume(Coin coin) {
+        batchHandler.getBatch(coin);
+        return "CoinConsumerFinish";
     }
 
     @KafkaListener(topics = "bitmoi-order", containerFactory = "orderConcurrentKafkaListenerContainerFactory")
-    public Mono<Execute> consume(Order order) {
-        return (Mono<Execute>) orderHandler.getOrder(order).subscribe();
+    public String consume(Order order) {
+        orderHandler.getOrder(order);
+        return "OrderConsumerFinish";
 //        System.out.printf("[order] '%s %s %s \n", order.getCoinid(), order.getPrice(), order.getQuantity());
     }
 }
