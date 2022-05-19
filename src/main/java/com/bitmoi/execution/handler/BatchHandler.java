@@ -132,6 +132,7 @@ public class BatchHandler {
     @Transactional
     public Flux<Execute> getBatch(Coin kafkaCoin) {
         return Mono.just(kafkaCoin)
+                .publishOn(Schedulers.boundedElastic())
         .flatMapMany(coin -> {
             return checkCoinInfo(coin);
         })

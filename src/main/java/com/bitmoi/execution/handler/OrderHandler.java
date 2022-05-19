@@ -40,6 +40,7 @@ public class OrderHandler {
     KafkaProducerService kafkaProducerService;
     public Mono<Execute> getOrder(Order kafkaOrder){
         return Mono.just(kafkaOrder)
+                .publishOn(Schedulers.boundedElastic())
             .flatMap(order -> {
                 return checkTypeAndPrice(order);
             })
