@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import reactor.core.Disposable;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -26,12 +27,12 @@ public class KafkaConsumerService {
     OrderHandler orderHandler;
 
     @KafkaListener(topics = "bitmoi-quotation", containerFactory = "coinConcurrentKafkaListenerContainerFactory")
-    public Mono<List<Execute>> consume(Coin coin) {
+    public Disposable consume(Coin coin) {
         return batchHandler.getBatch(coin);
     }
 
     @KafkaListener(topics = "bitmoi-order", containerFactory = "orderConcurrentKafkaListenerContainerFactory")
-    public Mono<Execute> consume(Order order) {
+    public Disposable consume(Order order) {
         return orderHandler.getOrder(order);
 //        System.out.printf("[order] '%s %s %s \n", order.getCoinid(), order.getPrice(), order.getQuantity());
     }

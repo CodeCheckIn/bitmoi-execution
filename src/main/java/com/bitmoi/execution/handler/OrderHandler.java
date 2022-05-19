@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.Disposable;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
@@ -38,8 +39,9 @@ public class OrderHandler {
     WalletService walletService;
     @Autowired
     KafkaProducerService kafkaProducerService;
-    public Mono<Execute> getOrder(Order kafkaOrder){
+    public Disposable getOrder(Order kafkaOrder){
         return Mono.just(kafkaOrder)
+            .publishOn(Schedulers.boundedElastic())
             .flatMap(order -> {
                 return checkTypeAndPrice(order);
             })
@@ -56,7 +58,7 @@ public class OrderHandler {
             .doOnNext(execute -> {
                 System.out.println("=========Kafka Order End=========");
             })
-            .subscribeOn(Schedulers.boundedElastic());
+            .subscribe();
     }
     public Mono<ServerResponse> getOrder(ServerRequest request) {
         Mono<Execute> executeMono = request.bodyToMono(Order.class)

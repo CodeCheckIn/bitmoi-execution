@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
@@ -129,8 +130,9 @@ public class BatchHandler {
     }
 
     @Transactional
-    public Mono<List<Execute>> getBatch(Coin kafkaCoin) {
+    public Disposable getBatch(Coin kafkaCoin) {
         return Mono.just(kafkaCoin)
+                .publishOn(Schedulers.boundedElastic())
         .flatMapMany(coin -> {
             return checkCoinInfo(coin);
         })
@@ -144,9 +146,9 @@ public class BatchHandler {
             return updatedWallet(execute);
         })
 //        .doOnNext(execute -> kafkaProducerService.sendExecuteMessage(execute))
-//        .doOnNext(execute -> {
-//            System.out.println("=========Kafka Batch End=========");
-//        })
-        .collectList().subscribeOn(Schedulers.boundedElastic());
+        .doOnNext(execute -> {
+            System.out.println("=========Kafka Batch End=========");
+        })
+        .collectList().subscribe();
     }
 }
