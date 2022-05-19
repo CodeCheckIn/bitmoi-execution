@@ -1,9 +1,9 @@
 # bitmoi-execution
 
 # Diagram
-https://docs.google.com/presentation/d/1tZ7lNzXC2uQhn9CE6zFiPNdAbP8x40kPPBw7e2GqyyM/edit#slide=id.g12c996c8542_4_0
+<img width="829" alt="스크린샷 2022-05-19 오후 8 27 18" src="https://user-images.githubusercontent.com/32088584/169283231-152815ed-cd9f-42f1-8fd0-7ddb0818463a.png">
 
-https://docs.google.com/presentation/d/1tZ7lNzXC2uQhn9CE6zFiPNdAbP8x40kPPBw7e2GqyyM/edit#slide=id.g12c996c8542_4_51
+<img width="834" alt="스크린샷 2022-05-19 오후 8 27 29" src="https://user-images.githubusercontent.com/32088584/169283270-46f1aea4-86fb-438c-83bd-d5a32441c773.png">
 
 # To do List
 ## Domain - Order kafka Consumer
