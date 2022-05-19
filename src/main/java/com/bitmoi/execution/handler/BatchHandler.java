@@ -99,14 +99,14 @@ public class BatchHandler {
         System.out.println("=========3.saveExecute=========");
         return executeService.save(new Execute(order.getOrderid(), order.getUserid(), order.getCoinid(), order.getPrice(), order.getQuantity(), order.getTypes(), LocalDateTime.now()));
     }
-
-    private Mono<Order> updateOrder(Order order) {
+    @Transactional
+    public Mono<Order> updateOrder(Order order) {
         System.out.println("=========2.updateOrder=========");
         order.setState(EXECUTE);
         return orderService.save(order);
     }
     @Transactional
-    private Flux<Order> checkCoinInfo(Coin coin) {
+    public Flux<Order> checkCoinInfo(Coin coin) {
         System.out.println("=========Kafka Batch Start=========");
         System.out.printf("%s %s %s \n", coin.getCoinId(), coin.getName(), coin.getPrice());
         return orderService.findAllByCoinId(coin)
