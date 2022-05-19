@@ -130,7 +130,7 @@ public class BatchHandler {
     }
 
     @Transactional
-    public Disposable getBatch(Coin kafkaCoin) {
+    public Flux<Execute> getBatch(Coin kafkaCoin) {
         return Mono.just(kafkaCoin)
                 .publishOn(Schedulers.boundedElastic())
         .flatMapMany(coin -> {
@@ -149,6 +149,6 @@ public class BatchHandler {
         .doOnNext(execute -> {
             System.out.println("=========Kafka Batch End=========");
         })
-        .collectList().subscribe();
+        .subscribeOn(Schedulers.boundedElastic());
     }
 }
