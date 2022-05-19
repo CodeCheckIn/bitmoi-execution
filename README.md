@@ -1,14 +1,14 @@
-# bitmoi-execution
+## bitmoi-execution
 
-# Diagram
-## Order Kafka Consumer Diagram
+## Diagram
+# Order Kafka Consumer Diagram
 <img width="829" alt="스크린샷 2022-05-19 오후 8 27 18" src="https://user-images.githubusercontent.com/32088584/169283231-152815ed-cd9f-42f1-8fd0-7ddb0818463a.png">
 
-## Batch Kafka Consumer Diagram
+# Batch Kafka Consumer Diagram
 <img width="834" alt="스크린샷 2022-05-19 오후 8 27 29" src="https://user-images.githubusercontent.com/32088584/169283270-46f1aea4-86fb-438c-83bd-d5a32441c773.png">
 
-# To do List
-## Domain - Order kafka Consumer
+## To do List
+# Domain - Order kafka Consumer
 1. 오더 서버 카프카 수신.
 2. 오더 정보와 현재 코인 가격을 비교하는 로직.
 3. 오더 상태 업데이트.
