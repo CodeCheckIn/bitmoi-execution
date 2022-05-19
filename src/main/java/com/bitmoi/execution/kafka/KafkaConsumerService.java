@@ -31,8 +31,8 @@ public class KafkaConsumerService {
     }
 
     @KafkaListener(topics = "bitmoi-order", containerFactory = "orderConcurrentKafkaListenerContainerFactory")
-    public void consume(Order order) {
-        orderHandler.getOrder(order);
+    public Mono<Execute> consume(Order order) {
+        return orderHandler.getOrder(order);
 //        System.out.printf("[order] '%s %s %s \n", order.getCoinid(), order.getPrice(), order.getQuantity());
     }
 }
