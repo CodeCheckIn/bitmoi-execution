@@ -2,6 +2,7 @@ package com.bitmoi.execution.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.relational.core.mapping.Table;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(value = "EXECUTE")
 public class Execute {
     private Integer execute_id;
@@ -31,4 +33,5 @@ public class Execute {
         this.types = types;
         this.created_at = created_at;
     }
+
 }
