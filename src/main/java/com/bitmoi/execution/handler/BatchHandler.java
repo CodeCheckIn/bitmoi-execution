@@ -39,36 +39,38 @@ public class BatchHandler {
     WalletService walletService;
     @Autowired
     KafkaProducerService kafkaProducerService;
-    @Transactional
-    public Mono<ServerResponse> getBatch(ServerRequest request) {
-        Mono<List<Execute>> mono = request.bodyToMono(Coin.class)
-                .flatMapMany(coin -> {
-                    return checkCoinInfo(coin);
-                })
-                .flatMap(order->{
-                    return updateOrder(order);
-                })
-                .flatMap(order -> {
-                    return saveExecute(order);
-                })
-                .flatMap(execute -> {
-                    return updatedWallet(execute);
-                })
-                .collectList()
-                .subscribeOn(Schedulers.parallel())
-                .log("batch get");
-
-        return ok()
-                .contentType(APPLICATION_JSON)
-                .body(mono, List.class)
-                .onErrorResume(error -> ServerResponse.badRequest().build())
-                .log("batch ok");
-    }
+//    @Transactional
+//    public Mono<ServerResponse> getBatch(ServerRequest request) {
+//        Mono<List<Execute>> mono = request.bodyToMono(Coin.class)
+//                .flatMapMany(coin -> {
+//                    return checkCoinInfo(coin);
+//                })
+//                .flatMap(order->{
+//                    return updateOrder(order);
+//                })
+//                .flatMap(order -> {
+//                    return saveExecute(order);
+//                })
+//                .flatMap(execute -> {
+//                    return updatedWallet(execute);
+//                })
+//                .collectList()
+//                .subscribeOn(Schedulers.parallel())
+//                .log("batch get");
+//
+//        return ok()
+//                .contentType(APPLICATION_JSON)
+//                .body(mono, List.class)
+//                .onErrorResume(error -> ServerResponse.badRequest().build())
+//                .log("batch ok");
+//    }
 
     private Flux<Execute> updatedWallet(Execute execute) {
         System.out.println("=========4.updatedWallet=========");
         return walletService.getWalletByUserId(execute.getUser_id())
                 .filter(wallet -> {
+                    System.out.println(wallet.toString());
+                    System.out.println("wallet Update >>>>");
                     if (execute.getTypes().equals(BID)) {
                         if (execute.getCoin_id().equals(wallet.getCoin_id())) {
                             wallet.setAvg_price((wallet.getQuantity() * wallet.getAvg_price() + execute.getQuantity() * execute.getPrice()) / wallet.getQuantity() + execute.getQuantity());
@@ -77,6 +79,7 @@ public class BatchHandler {
                             wallet.setQuantity(wallet.getQuantity() - (execute.getPrice() * execute.getQuantity()));
                             wallet.setWaiting_qty(wallet.getWaiting_qty() - (execute.getPrice() * execute.getQuantity()));
                         }
+                        System.out.println(wallet.toString());
                         return true;
                     } else if (execute.getTypes().equals(ASK)) {
                         if (execute.getCoin_id().equals(wallet.getCoin_id())) {
@@ -85,8 +88,10 @@ public class BatchHandler {
                         } else if (wallet.getCoin_id() == KRW_ID) {
                             wallet.setQuantity(wallet.getQuantity() + execute.getQuantity() * execute.getPrice());
                         }
+                        System.out.println(wallet.toString());
                         return true;
                     }
+                    System.out.println("Noting updated");
                     return false;
                 })
                 .flatMap(wallet -> walletService.save(wallet))
@@ -102,13 +107,15 @@ public class BatchHandler {
     @Transactional
     public Mono<Order> updateOrder(Order order) {
         System.out.println("=========2.updateOrder=========");
+        System.out.println(order.toString());
         order.setState(EXECUTE);
+        System.out.println("set Execute state >>");
+        System.out.println(order.toString());
         return orderService.save(order);
     }
     @Transactional
     public Flux<Order> checkCoinInfo(Coin coin) {
-        System.out.println("=========Kafka Batch Start=========");
-        System.out.printf("%s %s %s \n", coin.getCoinId(), coin.getName(), coin.getPrice());
+
         return orderService.findAllByCoinId(coin)
                 .filter(order -> {
                     System.out.println("=========1.checkCoinInfo=========");
@@ -117,19 +124,26 @@ public class BatchHandler {
     }
 
     private boolean checkOrderBook(Coin coin, Order order) {
+        System.out.println(coin.toString());
+        System.out.println(order.toString());
         if(order.getTypes().equals(BID)
         && order.getPrice()>= coin.getPrice()){
             order.setPrice(coin.getPrice());
+            System.out.println("Filter return true");
             return true;
         }else if(order.getTypes().equals(ASK)
                 && order.getPrice()<= coin.getPrice()){
             order.setPrice(coin.getPrice());
+            System.out.println("Filter return true");
             return true;
         }
+        System.out.println("Filter return false");
         return false;
     }
 
     public void getBatch(Coin kafkaCoin) {
+        System.out.println("=========Kafka Batch Start=========");
+        System.out.printf("%s %s %s \n", kafkaCoin.getCoinId(), kafkaCoin.getName(), kafkaCoin.getPrice());
         Mono.just(kafkaCoin)
                 .publishOn(Schedulers.boundedElastic())
         .flatMapMany(coin -> {
@@ -146,8 +160,8 @@ public class BatchHandler {
         }).collectList()
         .doOnNext(execute -> kafkaProducerService.sendExecuteMessage(execute))
         .doOnNext(execute -> {
-            System.out.println("=========Kafka Batch End=========");
         })
         .subscribe();
+        System.out.println("=========Kafka Batch End=========");
     }
 }

@@ -59,32 +59,32 @@ public class OrderHandler {
                 System.out.println("=========Kafka Order End=========");
             }).subscribe();
     }
-    public Mono<ServerResponse> getOrder(ServerRequest request) {
-        Mono<Execute> executeMono = request.bodyToMono(Order.class)
-                .flatMap(order -> {
-                    return checkTypeAndPrice(order);
-                })
-                .flatMap(order -> {
-                    return updateOrderbook(order);
-                })
-                .flatMap(order -> {
-                    return saveExecute(order);
-                })
-                .flatMap(execute -> {
-                    return updateWallet(execute);
-                })
-                .doOnNext(execute -> {
-//                    kafkaProducer.(execute);
-                })
-                .subscribeOn(Schedulers.parallel())
-                .log("execute Order get");
-
-        return ok()
-                .contentType(APPLICATION_JSON)
-                .body(executeMono, Execute.class)
-                .onErrorResume(error -> ServerResponse.badRequest().build())
-                .log("execute Order ok");
-    }
+//    public Mono<ServerResponse> getOrder(ServerRequest request) {
+//        Mono<Execute> executeMono = request.bodyToMono(Order.class)
+//                .flatMap(order -> {
+//                    return checkTypeAndPrice(order);
+//                })
+//                .flatMap(order -> {
+//                    return updateOrderbook(order);
+//                })
+//                .flatMap(order -> {
+//                    return saveExecute(order);
+//                })
+//                .flatMap(execute -> {
+//                    return updateWallet(execute);
+//                })
+//                .doOnNext(execute -> {
+////                    kafkaProducer.(execute);
+//                })
+//                .subscribeOn(Schedulers.parallel())
+//                .log("execute Order get");
+//
+//        return ok()
+//                .contentType(APPLICATION_JSON)
+//                .body(executeMono, Execute.class)
+//                .onErrorResume(error -> ServerResponse.badRequest().build())
+//                .log("execute Order ok");
+//    }
 
     private Mono<Execute> updateWallet(Execute execute) {
         System.out.println("=========4.updateWallet=========");
