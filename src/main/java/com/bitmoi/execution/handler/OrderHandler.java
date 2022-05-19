@@ -56,8 +56,7 @@ public class OrderHandler {
             .doOnNext(execute -> kafkaProducerService.sendExecuteMessage(execute))
             .doOnNext(execute -> {
                 System.out.println("=========Kafka Order End=========");
-            })
-            .subscribeOn(Schedulers.boundedElastic());
+            });
     }
     public Mono<ServerResponse> getOrder(ServerRequest request) {
         Mono<Execute> executeMono = request.bodyToMono(Order.class)

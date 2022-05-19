@@ -148,7 +148,6 @@ public class BatchHandler {
         .doOnNext(execute -> kafkaProducerService.sendExecuteMessage(execute))
         .doOnNext(execute -> {
             System.out.println("=========Kafka Batch End=========");
-        })
-        .subscribeOn(Schedulers.boundedElastic());
+        });
     }
 }
