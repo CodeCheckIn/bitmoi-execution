@@ -1,11 +1,12 @@
-## bitmoi-execution
+# bitmoi-execution
 
+# Diagram
 https://docs.google.com/presentation/d/1tZ7lNzXC2uQhn9CE6zFiPNdAbP8x40kPPBw7e2GqyyM/edit#slide=id.g12c996c8542_4_0
 
 https://docs.google.com/presentation/d/1tZ7lNzXC2uQhn9CE6zFiPNdAbP8x40kPPBw7e2GqyyM/edit#slide=id.g12c996c8542_4_51
 
-## To do List
-# Domain - Order kafka Consumer
+# To do List
+## Domain - Order kafka Consumer
 1. 오더 서버 카프카 수신.
 2. 오더 정보와 현재 코인 가격을 비교하는 로직.
 3. 오더 상태 업데이트.
