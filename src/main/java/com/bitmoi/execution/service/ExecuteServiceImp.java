@@ -19,8 +19,7 @@ public class ExecuteServiceImp implements ExecuteService{
 
     @Override
     public Flux<Execute> getMyExecution(Integer userId) {
-        return executeRepository.findAll()
-                .filter(execute -> execute.getUser_id()==userId);
+        return executeRepository.findAllByUserId(userId);
     }
 
 }
