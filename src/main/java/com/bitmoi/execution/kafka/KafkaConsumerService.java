@@ -29,11 +29,13 @@ public class KafkaConsumerService {
 
     @KafkaListener(topics = "bitmoi-quotation", containerFactory = "coinConcurrentKafkaListenerContainerFactory")
     public Flux<Execute> consume(Coin coin) {
+        System.out.println("bitmoi-quotation================================================");
         return batchHandler.getBatch(coin);
     }
 
     @KafkaListener(topics = "bitmoi-order", containerFactory = "orderConcurrentKafkaListenerContainerFactory")
     public Mono<Execute> consume(Order order) {
+        System.out.println("bitmoi-order================================================");
         return orderHandler.getOrder(order);
 //        System.out.printf("[order] '%s %s %s \n", order.getCoinid(), order.getPrice(), order.getQuantity());
     }
