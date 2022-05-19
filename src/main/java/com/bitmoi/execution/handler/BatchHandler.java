@@ -130,8 +130,8 @@ public class BatchHandler {
     }
 
     @Transactional
-    public void getBatch(Coin kafkaCoin) {
-        Mono.just(kafkaCoin)
+    public Disposable getBatch(Coin kafkaCoin) {
+        return Mono.just(kafkaCoin)
                 .publishOn(Schedulers.boundedElastic())
         .flatMapMany(coin -> {
             return checkCoinInfo(coin);
