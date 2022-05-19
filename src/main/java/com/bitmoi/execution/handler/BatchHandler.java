@@ -105,7 +105,7 @@ public class BatchHandler {
         order.setState(EXECUTE);
         return orderService.save(order);
     }
-
+    @Transactional
     private Flux<Order> checkCoinInfo(Coin coin) {
         System.out.println("=========Kafka Batch Start=========");
         System.out.printf("%s %s %s \n", coin.getCoinId(), coin.getName(), coin.getPrice());
@@ -129,9 +129,8 @@ public class BatchHandler {
         return false;
     }
 
-    @Transactional
-    public Disposable getBatch(Coin kafkaCoin) {
-        return Mono.just(kafkaCoin)
+    public void getBatch(Coin kafkaCoin) {
+        Mono.just(kafkaCoin)
                 .publishOn(Schedulers.boundedElastic())
         .flatMapMany(coin -> {
             return checkCoinInfo(coin);
