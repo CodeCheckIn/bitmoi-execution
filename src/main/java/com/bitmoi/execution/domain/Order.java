@@ -35,9 +35,9 @@ public class Order {
     private String state;
     @Column(value = "created_at")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createdat;
+    private LocalDateTime created_at;
     @Column(value = "updated_at")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime updatedat;
+    private LocalDateTime updated_at;
 
 }
