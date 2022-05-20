@@ -1,5 +1,6 @@
 package com.bitmoi.execution.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,9 @@ public class Execute {
     private Double price;
     private Double quantity;
     private String types;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime created_at;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updated_at;
 
     public Execute(Integer order_id, Integer user_id, Integer coin_id, Double price, Double quantity, String types, LocalDateTime created_at) {
